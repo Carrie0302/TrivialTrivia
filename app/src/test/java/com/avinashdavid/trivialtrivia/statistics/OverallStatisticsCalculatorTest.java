@@ -47,4 +47,15 @@ public class OverallStatisticsCalculatorTest
         double expected = -1;
         assertEquals(expected, actual, 0.0001);
     }
+
+
+    @Test
+    public void getNumberOfPerfectQuizzesWithEqualInputLists()
+    {
+        int[] scorelist = new int[]{3, 7, 10};
+        int[] quizsizelist = new int[]{2, 7, 3};
+        double actual = OverallStatisticsCalculator.getNumberOfPerfectQuizzes(scorelist, quizsizelist);
+        double expected = 1;
+        assertEquals(expected, actual, 0.0001);
+    }
 }
