@@ -21,4 +21,19 @@ public class OverallStatisticsCalculatorTest
         }
         fail("Expected IllegalArgumentException");
     }
+
+    @Test
+    public void GetNumberOfPerfectQuizzesWithNullQuizSizeListThrows()
+    {
+        int[] scorelist = new int[]{7, 3};
+        try
+        {
+            OverallStatisticsCalculator.getNumberOfPerfectQuizzes(scorelist, null);
+        }
+        catch (IllegalArgumentException e)
+        {
+            assertTrue(true);
+        }
+        fail("Expected IllegalArgumentException");
+    }
 }
