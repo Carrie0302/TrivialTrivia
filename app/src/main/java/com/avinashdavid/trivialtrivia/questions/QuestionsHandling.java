@@ -142,4 +142,18 @@ public class QuestionsHandling {
         displayList.add(INDEX_CHOICE_4, thisQuestion.choicesList[3]);
         return displayList;
     }
+
+    /* Extra 'get' methods to help testing and verification */
+
+    public ArrayList<IndividualQuestion> getAllIndividualQuestions(){
+        return mALLIndividualQuestions;
+    }
+
+    public ArrayList<IndividualQuestion> getCurrentSetOfQuestions(){
+        return mCurrentSetOfQuestions;
+    }
+
+    public QuestionsHandling getsQuestionsHandling(){
+        return sQuestionsHandling;
+    }
 }
