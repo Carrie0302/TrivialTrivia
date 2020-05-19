@@ -40,7 +40,8 @@ public class QuestionsHandling {
     public static final int INDEX_CHOICE_3 = 4;
     public static final int INDEX_CHOICE_4 = 5;
 
-    //private constructor for singleton property. This will be a large object that only needs to be constructed once while it can be helped
+    //private constructor for singleton property. This will be a large object that only needs to be
+    // constructed once while it can be helped
     private QuestionsHandling(Context context) {
         this.mContext = context;
         this.mMasterJSONString = loadJSONFromAsset();
