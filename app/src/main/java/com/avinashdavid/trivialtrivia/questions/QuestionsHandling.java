@@ -145,15 +145,11 @@ public class QuestionsHandling {
 
     /* Extra 'get' methods to help testing and verification */
 
-    public ArrayList<IndividualQuestion> getAllIndividualQuestions(){
-        return mALLIndividualQuestions;
-    }
-
     public ArrayList<IndividualQuestion> getCurrentSetOfQuestions(){
         return mCurrentSetOfQuestions;
     }
 
-    public QuestionsHandling getsQuestionsHandling(){
-        return sQuestionsHandling;
+    public String getJSONString(){
+        return mMasterJSONString;
     }
 }
