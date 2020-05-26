@@ -86,7 +86,9 @@ public class QuizProviderTest {
     @Test
     public void QuizProviderGetTypeQuizAll(){
         // Arrange
+
         // Act
+        String actual = qp.getType();
         // Assert
     }
 
@@ -118,11 +120,11 @@ public class QuizProviderTest {
         // Assert
     }
 
-    @Test (expected = NullPointerException.class)
+    @Test (expected = UnsupportedOperationException.class)
     public void QuizProviderGetTypeDefaultShouldThrow(){
         // Arrange
         // Act
-        String actual = qp.getType(null);
+        String actual = qp.getType(mock(Uri.class));
         // Assert
     }
 }
