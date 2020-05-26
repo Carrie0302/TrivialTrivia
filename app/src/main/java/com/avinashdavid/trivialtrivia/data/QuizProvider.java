@@ -2,6 +2,7 @@ package com.avinashdavid.trivialtrivia.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -73,7 +74,8 @@ public class QuizProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mQuizDBHelper = QuizDBHelper.getInstance(getContext());
+        Context context = getContext();
+        mQuizDBHelper = QuizDBHelper.getInstance(context);
         return true;
     }
 
