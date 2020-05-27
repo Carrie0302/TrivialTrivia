@@ -218,7 +218,7 @@ public class QuizProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
-        if (contentValues.equals(null)){
+        if (contentValues == null){
             return 0;
         }
         int retInt;
@@ -263,5 +263,10 @@ public class QuizProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+    }
+
+    // Helper method for testing
+    public QuizDBHelper getMQuizDBHelper(){
+        return mQuizDBHelper;
     }
 }

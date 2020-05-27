@@ -1,7 +1,9 @@
 package com.avinashdavid.trivialtrivia.data;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.avinashdavid.trivialtrivia.Utility;
@@ -13,6 +15,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.MockitoRule;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -62,19 +65,60 @@ public class QuizProviderTest {
     }
 
     @Test
-    public void QuizProviderInsertWithNullValues(){
+    public void QuizProviderUpdateWithNullValues(){
         // Arrange
+        ContentValues cv = null;
+        String[] selArgs = {"a", "b", "c"};
         // Act
-        //Uri actual = qp.insert(mock(Uri.class), null);
+        int actual = qp.update(mock(Uri.class), cv, " ", selArgs);
         // Assert
-        //assertNull(actual);
+        assertEquals(0, actual);
     }
 
     @Test
-    public void QuizProviderInsertWithNullURI(){
+    public void QuizProviderUpdateWithNullURI(){
         // Arrange
+        String[] selArgs = {"a", "b", "c"};
         // Act
+        int actual = qp.update(null, null, " ", selArgs);
         // Assert
+        assertEquals(0, actual);
+    }
+
+    @Test
+    public void QuizProviderUpdateWithDefaultURI(){
+        // Arrange
+        String[] selArgs = {"a", "b", "c"};
+        // Act
+        int actual = qp.update(mock(Uri.class), null, " ", selArgs);
+        // Assert
+        assertEquals(0, actual);
+    }
+
+    @Test
+    public void QuizProviderUpdateWithCategoryIDURI(){
+        // Arrange
+        String sel = "a";
+        String[] selArgs = {"a", "b", "c"};
+        Uri uri = QuizDBContract.CategoryEntry.buildUriCategoryId(QuizProvider.CATEGORY_ID);
+        ContentValues cv = mock(ContentValues.class);
+        QuizDBHelper qbh = qp.getMQuizDBHelper();
+        when(qbh.getWritableDatabase()).thenReturn(mock(SQLiteDatabase.class));
+
+        // Act
+        int actual = qp.update(uri, cv, sel, selArgs);
+        // Assert
+        assertEquals(1, actual);
+    }
+
+    @Test
+    public void QuizProviderUpdateWithCategoryNameURI(){
+        // Arrange
+
+        // Act
+
+        // Assert
+
     }
 
     @Test
@@ -143,6 +187,15 @@ public class QuizProviderTest {
         // Arrange
         // Act
         String actual = qp.getType(mock(Uri.class));
+        // Assert - it should throw exception so no need to assert
+    }
+
+    // Test fails due to code bug - method does not handle null input
+    @Test
+    public void QuizProviderGetTypeNullShouldFail(){
+        // Arrange
+        // Act
+        String actual = qp.getType(null);
         // Assert - it should throw exception so no need to assert
     }
 }
