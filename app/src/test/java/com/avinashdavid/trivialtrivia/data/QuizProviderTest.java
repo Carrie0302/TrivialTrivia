@@ -86,6 +86,7 @@ public class QuizProviderTest {
         assertEquals(0, actual);
     }
 
+    // Test fails due to mismatch
     @Test
     public void QuizProviderGetTypeQuizAll(){
         // Arrange
@@ -106,6 +107,7 @@ public class QuizProviderTest {
         assertEquals(QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE, actual);
     }
 
+    // Test fails due to mismatch
     @Test
     public void QuizProviderGetTypeCategoryAll(){
         // Arrange
@@ -141,6 +143,6 @@ public class QuizProviderTest {
         // Arrange
         // Act
         String actual = qp.getType(mock(Uri.class));
-        // Assert
+        // Assert - it should throw exception so no need to assert
     }
 }
