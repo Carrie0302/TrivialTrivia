@@ -32,7 +32,8 @@ public class QuizDBContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_QUIZ;
 
-        //The following 5 methods are to build URIs for various selections of data in the quiz table. These URIs will be recognized by the content provider to look up desired data
+        //The following 5 methods are to build URIs for various selections of data in the quiz table.
+        // These URIs will be recognized by the content provider to look up desired data
         public static Uri buildUriQuizId(long id){
             Uri uri = CONTENT_URI.buildUpon().appendPath(Long.toString(id)).build();
             return uri;

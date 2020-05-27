@@ -27,6 +27,7 @@ import java.util.Arrays;
 import static com.avinashdavid.trivialtrivia.statistics.OverallStatisticsCalculator.AVERAGE_PERCENTAGE_SCORE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
@@ -64,7 +65,9 @@ public class QuizProviderTest {
     public void QuizProviderInsertWithNullValues(){
         // Arrange
         // Act
+        //Uri actual = qp.insert(mock(Uri.class), null);
         // Assert
+        //assertNull(actual);
     }
 
     @Test
@@ -86,38 +89,51 @@ public class QuizProviderTest {
     @Test
     public void QuizProviderGetTypeQuizAll(){
         // Arrange
-
+        Uri uri = QuizDBContract.QuizEntry.buildUriQuizId(QuizProvider.QUIZ_ALL);
         // Act
-        String actual = qp.getType();
+        String actual = qp.getType(uri);
         // Assert
+        assertEquals(QuizDBContract.QuizEntry.CONTENT_TYPE, actual);
     }
 
     @Test
     public void QuizProviderGetTypeQuizID(){
         // Arrange
+        Uri uri = QuizDBContract.QuizEntry.buildUriQuizId(QuizProvider.QUIZ_ID);
         // Act
+        String actual = qp.getType(uri);
         // Assert
+        assertEquals(QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE, actual);
     }
 
     @Test
     public void QuizProviderGetTypeCategoryAll(){
         // Arrange
+        Uri uri = QuizDBContract.CategoryEntry.buildUriCategoryId(QuizProvider.CATEGORY_ALL);
         // Act
+        String actual = qp.getType(uri);
         // Assert
+        assertEquals(QuizDBContract.QuizEntry.CONTENT_TYPE, actual);
     }
 
     @Test
     public void QuizProviderGetTypeCategoryID(){
         // Arrange
+        Uri uri = QuizDBContract.CategoryEntry.buildUriCategoryId(QuizProvider.CATEGORY_ID);
         // Act
+        String actual = qp.getType(uri);
         // Assert
+        assertEquals(QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE, actual);
     }
 
     @Test
     public void QuizProviderGetTypeCategoryName(){
         // Arrange
+        Uri uri = QuizDBContract.CategoryEntry.buildUriCategoryId(QuizProvider.CATEGORY_NAME);
         // Act
+        String actual = qp.getType(uri);
         // Assert
+        assertEquals(QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE, actual);
     }
 
     @Test (expected = UnsupportedOperationException.class)
