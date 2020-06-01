@@ -51,7 +51,6 @@ public class QuizProviderTest {
     public void setUp(){
         qp = new QuizProvider();
         mockContext = mock(Context.class);
-        //when(qp.onCreate()).thenReturn(true);
     }
 
     @Test
@@ -86,7 +85,7 @@ public class QuizProviderTest {
     }
 
     @Test
-    public void QuizProviderUpdateWithDefaultURI(){
+    public void QuizProviderUpdateWithDefaultURI() {
         // Arrange
         String[] selArgs = {"a", "b", "c"};
         // Act
@@ -94,6 +93,7 @@ public class QuizProviderTest {
         // Assert
         assertEquals(0, actual);
     }
+
 
     @Test
     public void QuizProviderUpdateWithCategoryIDURI(){
@@ -103,7 +103,8 @@ public class QuizProviderTest {
         Uri uri = QuizDBContract.CategoryEntry.buildUriCategoryId(QuizProvider.CATEGORY_ID);
         ContentValues cv = mock(ContentValues.class);
         QuizDBHelper qbh = qp.getMQuizDBHelper();
-        when(qbh.getWritableDatabase()).thenReturn(mock(SQLiteDatabase.class));
+        // next line crashes execution
+        //when(qbh.getWritableDatabase()).thenReturn(mock(SQLiteDatabase.class));
 
         // Act
         int actual = qp.update(uri, cv, sel, selArgs);
@@ -131,6 +132,7 @@ public class QuizProviderTest {
     }
 
     // Test fails due to mismatch
+    // Quiz_All URI falsely matches to Quiz_ID
     @Test
     public void QuizProviderGetTypeQuizAll(){
         // Arrange
@@ -152,6 +154,7 @@ public class QuizProviderTest {
     }
 
     // Test fails due to mismatch
+    // Category_All URI is falsely matching to Category_ID URI
     @Test
     public void QuizProviderGetTypeCategoryAll(){
         // Arrange
@@ -175,7 +178,7 @@ public class QuizProviderTest {
     @Test
     public void QuizProviderGetTypeCategoryName(){
         // Arrange
-        Uri uri = QuizDBContract.CategoryEntry.buildUriCategoryId(QuizProvider.CATEGORY_NAME);
+        Uri uri = QuizDBContract.CategoryEntry.buildUriCategoryName(String.valueOf(QuizProvider.CATEGORY_NAME));
         // Act
         String actual = qp.getType(uri);
         // Assert
@@ -192,7 +195,7 @@ public class QuizProviderTest {
 
     // Test fails due to code bug - method does not handle null input
     @Test
-    public void QuizProviderGetTypeNullShouldFail(){
+    public void QuizProviderGetTypeNullShouldHandle(){
         // Arrange
         // Act
         String actual = qp.getType(null);

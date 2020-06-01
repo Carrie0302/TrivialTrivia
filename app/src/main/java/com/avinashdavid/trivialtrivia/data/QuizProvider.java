@@ -265,8 +265,11 @@ public class QuizProvider extends ContentProvider {
         }
     }
 
-    // Helper method for testing
+    // Helper methods for testing
     public QuizDBHelper getMQuizDBHelper(){
         return mQuizDBHelper;
+    }
+    public UriMatcher getURImatcher(){
+        return sUriMatcher;
     }
 }
