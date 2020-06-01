@@ -79,6 +79,11 @@ public class QuizProvider extends ContentProvider {
         return true;
     }
 
+    public boolean onCreate(Context context) {
+        mQuizDBHelper = QuizDBHelper.getInstance(context);
+        return true;
+    }
+
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
@@ -253,13 +258,11 @@ public class QuizProvider extends ContentProvider {
             case QUIZ_ALL:
                 return QuizDBContract.QuizEntry.CONTENT_TYPE;
             case QUIZ_ID:
+            case CATEGORY_NAME:
+            case CATEGORY_ID:
                 return QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE;
             case CATEGORY_ALL:
                 return QuizDBContract.CategoryEntry.CONTENT_TYPE;
-            case CATEGORY_ID:
-                return QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE;
-            case CATEGORY_NAME:
-                return QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -269,7 +272,5 @@ public class QuizProvider extends ContentProvider {
     public QuizDBHelper getMQuizDBHelper(){
         return mQuizDBHelper;
     }
-    public UriMatcher getURImatcher(){
-        return sUriMatcher;
-    }
+
 }

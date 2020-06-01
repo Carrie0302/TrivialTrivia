@@ -22,6 +22,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.fakes.RoboCursor;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class QuizProviderTest {
 
     @Mock
     Context mockContext;
+    private QuizDBHelper quizDBHelper;
 
     public QuizProvider qp;
 
@@ -51,16 +53,18 @@ public class QuizProviderTest {
     public void setUp(){
         qp = new QuizProvider();
         mockContext = mock(Context.class);
+        qp.onCreate(mockContext);
+        quizDBHelper = new QuizDBHelper(RuntimeEnvironment.application);
     }
 
+    // Only tests one OnCreate method because other OnCreate doesn't allow for mocking context
     @Test
     public void QuizProviderOnCreateShouldPass(){
         // Arrange
         // Act
-        //when(qp.onCreate()).thenReturn(true);
-        //Boolean actual = qp.onCreate();
+        Boolean actual = qp.onCreate(mockContext);
         // Assert
-        //assertEquals(true, actual);
+        assertEquals(true, actual);
     }
 
     @Test
@@ -103,8 +107,7 @@ public class QuizProviderTest {
         Uri uri = QuizDBContract.CategoryEntry.buildUriCategoryId(QuizProvider.CATEGORY_ID);
         ContentValues cv = mock(ContentValues.class);
         QuizDBHelper qbh = qp.getMQuizDBHelper();
-        // next line crashes execution
-        //when(qbh.getWritableDatabase()).thenReturn(mock(SQLiteDatabase.class));
+        when(qbh.getWritableDatabase()).thenReturn(quizDBHelper.getWritableDatabase());
 
         // Act
         int actual = qp.update(uri, cv, sel, selArgs);
