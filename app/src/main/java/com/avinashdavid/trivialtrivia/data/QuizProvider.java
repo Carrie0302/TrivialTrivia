@@ -79,11 +79,6 @@ public class QuizProvider extends ContentProvider {
         return true;
     }
 
-    public boolean onCreate(Context context) {
-        mQuizDBHelper = QuizDBHelper.getInstance(context);
-        return true;
-    }
-
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
@@ -267,10 +262,4 @@ public class QuizProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
-
-    // Helper methods for testing
-    public QuizDBHelper getMQuizDBHelper(){
-        return mQuizDBHelper;
-    }
-
 }
