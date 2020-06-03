@@ -4,7 +4,7 @@ import subprocess, smtplib, ssl, sys, time
 from email.message import EmailMessage
 import re, config
 import random, datetime
-
+import os
 
 """
  RunTestSuite runs the unit tests in android studio a certain 
@@ -31,8 +31,11 @@ def getTestResults(output):
 
 
 def runAndroidTest():
-    subprocess.call("gradlew build -x lint", shell=True)
-    cmdExe = "gradlew test"
+    workingDirectory = os.path.dirname(os.path.realpath(__file__)) 
+    gradlewPath = os.path.join(workingDirectory, "gradlew")
+    print(gradlewPath)
+    subprocess.call(f"{gradlewPath} build -x lint", shell=True, cwd=workingDirectory)
+    cmdExe = f"{gradlewPath} test"
     process = subprocess.Popen(cmdExe, stdout=subprocess.PIPE, shell=True)
     output = process.communicate()[0]
     output = str(output)
