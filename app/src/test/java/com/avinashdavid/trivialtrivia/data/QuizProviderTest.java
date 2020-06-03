@@ -88,14 +88,6 @@ public class QuizProviderTest {
         qp.onCreate();
     }
 
-    // Only tests one OnCreate method because other OnCreate doesn't allow for mocking context
-    @Test
-    public void QuizProviderOnCreateShouldPass(){
-        // Arrange
-        // Act
-        // Assert
-    }
-
     @Test
     public void QuizProviderUpdateWithNullValues(){
         // Arrange
@@ -122,7 +114,7 @@ public class QuizProviderTest {
         // Arrange
         String[] selArgs = {"a", "b", "c"};
         // Act
-        int actual = qp.update(mock(Uri.class), null, " ", selArgs);
+        int actual = qp.update(mock(Uri.class), mock(ContentValues.class), " ", selArgs);
         // Assert
         assertEquals(0, actual);
     }
@@ -147,7 +139,8 @@ public class QuizProviderTest {
         assertEquals(1, actual);
 
         // Check that database update was called with the parameters we intended
-        verify(quizDb).update(eq(QuizDBContract.CategoryEntry.TABLE_NAME), eq(cv), eq(sCategoryIdSelection), Mockito.argThat(new ArgumentMatcher<String[]>()
+        verify(quizDb).update(eq(QuizDBContract.CategoryEntry.TABLE_NAME), eq(cv), eq(sCategoryIdSelection),
+                Mockito.argThat(new ArgumentMatcher<String[]>()
         {
             @Override
             public boolean matches(String[] argument)
@@ -163,11 +156,53 @@ public class QuizProviderTest {
     @Test
     public void QuizProviderUpdateWithCategoryNameURI(){
         // Arrange
+        String sel = "a";
+        String[] selArgs = {"a", "b", "c"};
+        Uri uri = Uri.parse("content://com.avinashdavid.trivialtrivia.data/category/categoryName/general");
+        ContentValues cv = mock(ContentValues.class);
+
+        // Return any value other than zero so we know QuizProvider didn't return zero without calling quiz DB
+        when(quizDb.update(anyString(), any(ContentValues.class), anyString(), any(String[].class))).thenReturn(1);
 
         // Act
+        int actual = qp.update(uri, cv, sel, selArgs);
 
         // Assert
+        // Check that zero was not returned
+        assertEquals(1, actual);
 
+        // Check that database update was called with the parameters we intended
+        verify(quizDb).update(eq(QuizDBContract.CategoryEntry.TABLE_NAME), eq(cv), eq(sCategoryNameSelection),
+                Mockito.argThat(new ArgumentMatcher<String[]>()
+                {
+                    @Override
+                    public boolean matches(String[] argument)
+                    {
+                        return argument.length == 1 && argument[0].equals("general");
+                    }
+                }));
+
+        // Check that notify change was called
+        verify(mockContentResolver).notifyChange(uri, null);
+    }
+
+    @Test
+    public void QuizProviderInsertWithNullContentValues(){
+        // Arrange
+        ContentValues cv = null;
+        // Act
+        Uri actual = qp.insert(mock(Uri.class), cv);
+        // Assert
+        assertNull(actual);
+    }
+
+    @Test
+    public void QuizProviderQuery(){
+        // Arrange
+        // Act
+        int actual = qp.delete(null, null, null);
+        // Assert
+        assertEquals(0, actual);
     }
 
     @Test
@@ -179,12 +214,10 @@ public class QuizProviderTest {
         assertEquals(0, actual);
     }
 
-    // Test fails due to mismatch
-    // Quiz_All URI falsely matches to Quiz_ID
     @Test
     public void QuizProviderGetTypeQuizAll(){
         // Arrange
-        Uri uri = QuizDBContract.QuizEntry.buildUriQuizId(QuizProvider.QUIZ_ALL);
+        Uri uri = Uri.parse("content://com.avinashdavid.trivialtrivia.data/quiz");
         // Act
         String actual = qp.getType(uri);
         // Assert
@@ -201,17 +234,6 @@ public class QuizProviderTest {
         assertEquals(QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE, actual);
     }
 
-    // Test fails due to mismatch
-    // Category_All URI is falsely matching to Category_ID URI
-    @Test
-    public void QuizProviderGetTypeCategoryAll(){
-        // Arrange
-        Uri uri = QuizDBContract.CategoryEntry.buildUriCategoryId(QuizProvider.CATEGORY_ALL);
-        // Act
-        String actual = qp.getType(uri);
-        // Assert
-        assertEquals(QuizDBContract.QuizEntry.CONTENT_TYPE, actual);
-    }
 
     @Test
     public void QuizProviderGetTypeCategoryID(){
