@@ -2,6 +2,7 @@ package com.avinashdavid.trivialtrivia.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -49,7 +50,7 @@ public class QuizProvider extends ContentProvider {
         return new String[]{uri.getPathSegments().get(1)};
     }
 
-    private String[] getNameFromCategoryNameQuery(Uri uri){
+    public String[] getNameFromCategoryNameQuery(Uri uri){
         return new String[]{uri.getPathSegments().get(2)};
     }
 
@@ -73,7 +74,8 @@ public class QuizProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mQuizDBHelper = QuizDBHelper.getInstance(getContext());
+        Context context = getContext();
+        mQuizDBHelper = QuizDBHelper.getInstance(context);
         return true;
     }
 
@@ -118,23 +120,14 @@ public class QuizProvider extends ContentProvider {
         SQLiteDatabase quizDb = mQuizDBHelper.getReadableDatabase();
         switch (sUriMatcher.match(uri)){
             case QUIZ_ALL:{
-                retCursor = quizDb.query(QuizDBContract.QuizEntry.TABLE_NAME, projection, selection, selectionArgs, null,null, sortOrder);
+                retCursor = query(uri, projection,selection,selectionArgs,sortOrder);
                 break;
             }
-            case QUIZ_ID:{
+            case QUIZ_ID:
+            case CATEGORY_ALL:
+            case CATEGORY_ID:
+            case CATEGORY_NAME: {
                 retCursor = quizDb.query(QuizDBContract.QuizEntry.TABLE_NAME, projection, sQuizIdSelection, getIDFromIDQuery(uri), null, null, sortOrder);
-                break;
-            }
-            case CATEGORY_ALL:{
-                retCursor = quizDb.query(QuizDBContract.CategoryEntry.TABLE_NAME, projection, selection, selectionArgs, null,null, sortOrder);
-                break;
-            }
-            case CATEGORY_ID:{
-                retCursor = quizDb.query(QuizDBContract.QuizEntry.TABLE_NAME, projection, sCategoryIdSelection, getIDFromIDQuery(uri), null, null, sortOrder);
-                break;
-            }
-            case CATEGORY_NAME:{
-                retCursor = quizDb.query(QuizDBContract.QuizEntry.TABLE_NAME, projection, sCategoryNameSelection, getNameFromCategoryNameQuery(uri), null, null, sortOrder);
                 break;
             }
             default: {
@@ -148,7 +141,7 @@ public class QuizProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
-        if (contentValues.equals(null)){
+        if (contentValues == null){
             return null;
         }
         Uri retUri = null;
@@ -178,22 +171,8 @@ public class QuizProvider extends ContentProvider {
                 }
                 break;
             }
-            case CATEGORY_ALL:{
-                try {
-                    long _id = quizDb.insertOrThrow(QuizDBContract.CategoryEntry.TABLE_NAME, null, contentValues);
-                    if (_id>0) {
-                        retUri = QuizDBContract.CategoryEntry.buildUriCategoryId(_id);
-                        getContext().getContentResolver().notifyChange(uri, null);
-                    } else {
-                        retUri = null;
-                        throw new android.database.SQLException("Failed to insert row into " + uri + ": returned id of " + Long.toString(_id));
-                    }
-                } catch (SQLException e){
-//                    Log.d(LOG_TAG, e.getMessage());
-                }
-                break;
-            }
-            case CATEGORY_NAME:{
+            case CATEGORY_ALL:
+            case CATEGORY_NAME: {
                 try {
                     long _id = quizDb.insertOrThrow(QuizDBContract.CategoryEntry.TABLE_NAME, null, contentValues);
                     if (_id>0) {
@@ -216,7 +195,7 @@ public class QuizProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
-        if (contentValues.equals(null)){
+        if (contentValues == null){
             return 0;
         }
         int retInt;
@@ -251,13 +230,11 @@ public class QuizProvider extends ContentProvider {
             case QUIZ_ALL:
                 return QuizDBContract.QuizEntry.CONTENT_TYPE;
             case QUIZ_ID:
+            case CATEGORY_NAME:
+            case CATEGORY_ID:
                 return QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE;
             case CATEGORY_ALL:
                 return QuizDBContract.CategoryEntry.CONTENT_TYPE;
-            case CATEGORY_ID:
-                return QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE;
-            case CATEGORY_NAME:
-                return QuizDBContract.QuizEntry.CONTENT_ITEM_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
