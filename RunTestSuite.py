@@ -31,8 +31,8 @@ def getTestResults(output):
 
 
 def runAndroidTest():
-    subprocess.call("./gradlew build -x lint", shell=True)
-    cmdExe = "./gradlew test"
+    subprocess.call("gradlew build -x lint", shell=True)
+    cmdExe = "gradlew test"
     process = subprocess.Popen(cmdExe, stdout=subprocess.PIPE, shell=True)
     output = process.communicate()[0]
     output = str(output)
