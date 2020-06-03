@@ -196,14 +196,6 @@ public class QuizProviderTest {
         assertNull(actual);
     }
 
-    @Test
-    public void QuizProviderQuery(){
-        // Arrange
-        // Act
-        int actual = qp.delete(null, null, null);
-        // Assert
-        assertEquals(0, actual);
-    }
 
     @Test
     public void QuizProviderDelete(){
